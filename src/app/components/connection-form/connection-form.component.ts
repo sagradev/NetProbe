@@ -12,6 +12,7 @@ import { ConnectionRequest } from '../../models/netprobe.models';
 })
 export class ConnectionFormComponent {
   ip = '';
+  port = 8728;
   username = 'admin';
   password = '';
   loading = false;
@@ -23,7 +24,7 @@ export class ConnectionFormComponent {
     if (!this.ip || !this.username) return;
     this.loading = true;
     this.error = null;
-    const req: ConnectionRequest = { ip: this.ip, username: this.username, password: this.password };
+    const req: ConnectionRequest = { ip: this.ip, port: this.port, username: this.username, password: this.password };
     this.mikrotik.connect(req).subscribe({
       next: data => { this.loading = false; this.mikrotik.onConnected(data, req); },
       error: err => { this.loading = false; this.error = err.error?.error ?? 'Falha ao conectar'; }

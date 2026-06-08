@@ -1,5 +1,6 @@
 export interface ConnectionRequest {
   ip: string;
+  port: number;
   username: string;
   password: string;
 }

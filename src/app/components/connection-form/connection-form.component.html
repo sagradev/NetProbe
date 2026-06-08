@@ -10,10 +10,17 @@
 
       <form (ngSubmit)="connect()" #f="ngForm">
         <div class="space-y-4">
-          <div>
-            <label class="block text-sm text-gray-400 mb-1">Endereço IP</label>
-            <input [(ngModel)]="ip" name="ip" required placeholder="192.168.1.1"
-              class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition" />
+          <div class="flex gap-3">
+            <div class="flex-1">
+              <label class="block text-sm text-gray-400 mb-1">Endereço IP</label>
+              <input [(ngModel)]="ip" name="ip" required placeholder="192.168.1.1"
+                class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition" />
+            </div>
+            <div class="w-28">
+              <label class="block text-sm text-gray-400 mb-1">Porta API</label>
+              <input [(ngModel)]="port" name="port" type="number" required min="1" max="65535"
+                class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition" />
+            </div>
           </div>
           <div>
             <label class="block text-sm text-gray-400 mb-1">Usuário</label>
@@ -43,7 +50,7 @@
     </div>
 
     <p class="text-center text-gray-600 text-xs mt-6">
-      Porta 8728 (API) ou 80 (REST) • RouterOS v6 e v7+
+      Porta padrão 8728 (RouterOS API) • v6 e v7+
     </p>
   </div>
 </div>
