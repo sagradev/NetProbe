@@ -1,0 +1,112 @@
+<div class="space-y-6">
+
+  <!-- Ping -->
+  <div class="bg-gray-800 border border-gray-700 rounded-xl p-5">
+    <h3 class="text-white font-semibold mb-4">Ping</h3>
+    <div class="flex gap-3 flex-wrap">
+      <input [(ngModel)]="pingTarget" placeholder="IP ou hostname destino"
+        class="flex-1 min-w-[180px] bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 text-sm" />
+      <input [(ngModel)]="pingCount" type="number" min="1" max="100" placeholder="Pacotes"
+        class="w-24 bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500 text-sm" />
+      <button (click)="runPing()" [disabled]="pingLoading || !pingTarget"
+        class="bg-blue-600 hover:bg-blue-500 disabled:bg-blue-900 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
+        <svg *ngIf="pingLoading" class="animate-spin h-3 w-3" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+        </svg>
+        {{ pingLoading ? 'Executando...' : 'Executar' }}
+      </button>
+      <button *ngIf="pingResult || pingError" (click)="pingResult = null; pingError = null"
+        class="bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-2 rounded-lg text-sm transition">Limpar</button>
+    </div>
+    <div *ngIf="pingError" class="mt-3 text-red-400 text-sm">{{ pingError }}</div>
+    <div *ngIf="pingResult" class="mt-3">
+      <div class="bg-gray-950 border border-gray-700 rounded-lg p-4 font-mono text-xs text-green-300 space-y-0.5">
+        <div *ngFor="let line of pingResult.lines">{{ line }}</div>
+      </div>
+      <div class="mt-2 flex gap-4 text-xs text-gray-400">
+        <span>Enviados: <b class="text-white">{{ pingResult.sent }}</b></span>
+        <span>Recebidos: <b class="text-green-400">{{ pingResult.received }}</b></span>
+        <span>Perdidos: <b class="text-red-400">{{ pingResult.lost }}</b></span>
+        <span *ngIf="pingResult.avgRtt">RTT médio: <b class="text-white">{{ pingResult.avgRtt }}ms</b></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Traceroute -->
+  <div class="bg-gray-800 border border-gray-700 rounded-xl p-5">
+    <h3 class="text-white font-semibold mb-4">Traceroute</h3>
+    <div class="flex gap-3 flex-wrap">
+      <input [(ngModel)]="traceTarget" placeholder="IP ou hostname destino"
+        class="flex-1 min-w-[180px] bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 text-sm" />
+      <button (click)="runTrace()" [disabled]="traceLoading || !traceTarget"
+        class="bg-blue-600 hover:bg-blue-500 disabled:bg-blue-900 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
+        <svg *ngIf="traceLoading" class="animate-spin h-3 w-3" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+        </svg>
+        {{ traceLoading ? 'Executando...' : 'Executar' }}
+      </button>
+      <button *ngIf="traceResult || traceError" (click)="traceResult = null; traceError = null"
+        class="bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-2 rounded-lg text-sm transition">Limpar</button>
+    </div>
+    <div *ngIf="traceError" class="mt-3 text-red-400 text-sm">{{ traceError }}</div>
+    <div *ngIf="traceResult" class="mt-3 overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead><tr class="text-left text-gray-400 border-b border-gray-700">
+          <th class="py-2 pr-4">#</th><th class="py-2 pr-4">IP</th><th class="py-2 pr-4">Hostname</th><th class="py-2">Latência</th>
+        </tr></thead>
+        <tbody>
+          <tr *ngFor="let hop of traceResult.hops" class="border-b border-gray-800 font-mono text-xs">
+            <td class="py-2 pr-4 text-gray-400">{{ hop.hopNumber }}</td>
+            <td class="py-2 pr-4 text-white">{{ hop.address || '*' }}</td>
+            <td class="py-2 pr-4 text-gray-400">{{ hop.hostname || '—' }}</td>
+            <td class="py-2 text-green-400">{{ hop.latency }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bandwidth Test -->
+  <div class="bg-gray-800 border border-gray-700 rounded-xl p-5">
+    <h3 class="text-white font-semibold mb-2">Bandwidth Test</h3>
+    <div class="bg-yellow-900/30 border border-yellow-700/50 text-yellow-300 text-xs rounded-lg px-4 py-3 mb-4">
+      Requer dois MikroTiks: o destino deve ter o <b>bandwidth-server</b> habilitado (<code>tool bandwidth-server set enabled=yes</code>).
+    </div>
+    <div class="flex gap-3 flex-wrap">
+      <input [(ngModel)]="bwTarget" placeholder="IP do MikroTik destino"
+        class="flex-1 min-w-[180px] bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 text-sm" />
+      <select [(ngModel)]="bwDirection"
+        class="bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500 text-sm">
+        <option value="both">Upload + Download</option>
+        <option value="upload">Upload</option>
+        <option value="download">Download</option>
+      </select>
+      <input [(ngModel)]="bwDuration" type="number" min="1" max="60" placeholder="Duração (s)"
+        class="w-28 bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500 text-sm" />
+      <button (click)="runBwTest()" [disabled]="bwLoading || !bwTarget"
+        class="bg-blue-600 hover:bg-blue-500 disabled:bg-blue-900 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
+        <svg *ngIf="bwLoading" class="animate-spin h-3 w-3" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+        </svg>
+        {{ bwLoading ? 'Testando...' : 'Executar' }}
+      </button>
+      <button *ngIf="bwResult || bwError" (click)="bwResult = null; bwError = null"
+        class="bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-2 rounded-lg text-sm transition">Limpar</button>
+    </div>
+    <div *ngIf="bwError" class="mt-3 text-red-400 text-sm">{{ bwError }}</div>
+    <div *ngIf="bwResult" class="mt-4 flex gap-6 flex-wrap">
+      <div *ngIf="bwResult.txMbps" class="bg-gray-900 rounded-xl px-6 py-4 text-center">
+        <p class="text-xs text-gray-400 mb-1">Upload (TX)</p>
+        <p class="text-2xl font-bold text-blue-400">{{ bwResult.txMbps | number:'1.1-1' }} <span class="text-sm text-gray-400">Mbps</span></p>
+      </div>
+      <div *ngIf="bwResult.rxMbps" class="bg-gray-900 rounded-xl px-6 py-4 text-center">
+        <p class="text-xs text-gray-400 mb-1">Download (RX)</p>
+        <p class="text-2xl font-bold text-purple-400">{{ bwResult.rxMbps | number:'1.1-1' }} <span class="text-sm text-gray-400">Mbps</span></p>
+      </div>
+    </div>
+  </div>
+
+</div>

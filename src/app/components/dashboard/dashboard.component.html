@@ -1,0 +1,111 @@
+<div class="min-h-screen bg-gray-900 flex flex-col" *ngIf="data">
+
+  <!-- Header fixo -->
+  <header class="bg-gray-800 border-b border-gray-700 px-6 py-3 flex items-center justify-between gap-4 flex-wrap sticky top-0 z-10">
+    <div class="flex items-center gap-4">
+      <span class="text-white font-bold text-lg">{{ data.systemResource.identity || 'MikroTik' }}</span>
+      <span class="text-xs text-gray-400 font-mono bg-gray-900 px-2 py-1 rounded">{{ creds.ip }}</span>
+      <span class="text-xs text-gray-400">RouterOS {{ data.systemResource.routerOsVersion }}</span>
+    </div>
+    <div class="flex items-center gap-3 flex-wrap">
+      <!-- Countdown -->
+      <div class="flex items-center gap-2">
+        <div class="w-28 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+          <div class="h-full bg-blue-500 transition-all duration-1000 rounded-full" [style.width]="countdownWidth"></div>
+        </div>
+        <span class="text-xs text-gray-400 tabular-nums">{{ countdown }}s</span>
+      </div>
+      <!-- Last update -->
+      <span *ngIf="lastUpdate" class="text-xs text-gray-500">
+        Atualizado: {{ formatTime(lastUpdate) }}
+      </span>
+      <!-- Loading indicator -->
+      <svg *ngIf="loading" class="animate-spin h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+      </svg>
+      <button (click)="refresh()" [disabled]="loading"
+        class="bg-gray-700 hover:bg-gray-600 disabled:opacity-50 text-gray-200 text-xs px-3 py-1.5 rounded-lg transition">
+        Atualizar agora
+      </button>
+      <button (click)="disconnect()"
+        class="bg-red-800/60 hover:bg-red-700 text-red-300 text-xs px-3 py-1.5 rounded-lg transition">
+        Desconectar
+      </button>
+    </div>
+  </header>
+
+  <!-- Abas -->
+  <nav class="bg-gray-800 border-b border-gray-700 px-6 flex gap-1 overflow-x-auto">
+    <button *ngFor="let tab of tabs" (click)="activeTab = tab.id"
+      [class]="activeTab === tab.id
+        ? 'border-b-2 border-blue-500 text-blue-400'
+        : 'text-gray-400 hover:text-gray-200 border-b-2 border-transparent'"
+      class="px-4 py-3 text-sm font-medium whitespace-nowrap transition">
+      {{ tab.label }}
+    </button>
+  </nav>
+
+  <!-- Conteúdo -->
+  <main class="flex-1 p-6">
+
+    <ng-container [ngSwitch]="activeTab">
+
+      <!-- Visão Geral -->
+      <ng-container *ngSwitchCase="'overview'">
+        <app-system-resources
+          [resource]="data.systemResource"
+          [cpuHistory]="cpuHistory"
+          [ramHistory]="ramHistory">
+        </app-system-resources>
+      </ng-container>
+
+      <!-- Interfaces -->
+      <ng-container *ngSwitchCase="'interfaces'">
+        <div class="bg-gray-800 border border-gray-700 rounded-xl p-5">
+          <h2 class="text-gray-200 font-semibold mb-4">Interfaces de rede</h2>
+          <app-interfaces-table [interfaces]="data.interfaces"></app-interfaces-table>
+        </div>
+      </ng-container>
+
+      <!-- Rotas -->
+      <ng-container *ngSwitchCase="'routes'">
+        <div class="bg-gray-800 border border-gray-700 rounded-xl p-5">
+          <h2 class="text-gray-200 font-semibold mb-4">Tabela de rotas</h2>
+          <app-routes-table [routes]="data.routes"></app-routes-table>
+        </div>
+      </ng-container>
+
+      <!-- ARP -->
+      <ng-container *ngSwitchCase="'arp'">
+        <div class="bg-gray-800 border border-gray-700 rounded-xl p-5">
+          <h2 class="text-gray-200 font-semibold mb-4">Tabela ARP</h2>
+          <app-arp-table [entries]="data.arpEntries"></app-arp-table>
+        </div>
+      </ng-container>
+
+      <!-- DHCP -->
+      <ng-container *ngSwitchCase="'dhcp'">
+        <div class="bg-gray-800 border border-gray-700 rounded-xl p-5">
+          <h2 class="text-gray-200 font-semibold mb-4">DHCP Leases</h2>
+          <app-dhcp-table [leases]="data.dhcpLeases"></app-dhcp-table>
+        </div>
+      </ng-container>
+
+      <!-- Logs -->
+      <ng-container *ngSwitchCase="'logs'">
+        <div class="bg-gray-800 border border-gray-700 rounded-xl p-5">
+          <h2 class="text-gray-200 font-semibold mb-4">Logs do sistema</h2>
+          <app-logs-viewer [logs]="data.logs"></app-logs-viewer>
+        </div>
+      </ng-container>
+
+      <!-- Diagnóstico -->
+      <ng-container *ngSwitchCase="'diagnostic'">
+        <app-diagnostic-panel [credentials]="creds"></app-diagnostic-panel>
+      </ng-container>
+
+    </ng-container>
+  </main>
+
+</div>

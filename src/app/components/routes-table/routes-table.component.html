@@ -1,0 +1,39 @@
+<div class="space-y-4">
+  <div class="flex gap-2 flex-wrap">
+    <button *ngFor="let t of types" (click)="filter = t"
+      [class]="filter === t ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'"
+      class="px-3 py-1 rounded text-xs font-medium transition capitalize">
+      {{ t }}
+    </button>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="text-left text-gray-400 border-b border-gray-700">
+          <th class="py-3 pr-4">Destino</th>
+          <th class="py-3 pr-4">Gateway</th>
+          <th class="py-3 pr-4">Interface</th>
+          <th class="py-3 pr-4">Tipo</th>
+          <th class="py-3 pr-4">Dist.</th>
+          <th class="py-3 pr-4">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of filtered" class="border-b border-gray-800 hover:bg-gray-700/40 transition">
+          <td class="py-3 pr-4 font-mono text-white">{{ r.dstAddress }}</td>
+          <td class="py-3 pr-4 font-mono text-gray-300">{{ r.gateway || '—' }}</td>
+          <td class="py-3 pr-4 text-gray-300">{{ r.interface }}</td>
+          <td class="py-3 pr-4 text-xs text-gray-400 uppercase">{{ r.routeType }}</td>
+          <td class="py-3 pr-4 text-gray-400">{{ r.distance }}</td>
+          <td class="py-3 pr-4">
+            <span [class]="r.active ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300'"
+              class="px-2 py-0.5 rounded text-xs font-medium">
+              {{ r.active ? 'active' : 'inactive' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="filtered.length === 0" class="text-gray-500 text-sm py-6 text-center">Nenhuma rota encontrada</p>
+  </div>
+</div>

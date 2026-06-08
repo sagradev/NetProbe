@@ -1,0 +1,49 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-900 px-4">
+  <div class="w-full max-w-md">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-white tracking-tight">NetProbe</h1>
+      <p class="text-gray-400 mt-1 text-sm">Monitoramento MikroTik em tempo real</p>
+    </div>
+
+    <div class="bg-gray-800 border border-gray-700 rounded-xl p-8 shadow-xl">
+      <h2 class="text-lg font-semibold text-gray-200 mb-6">Conectar ao roteador</h2>
+
+      <form (ngSubmit)="connect()" #f="ngForm">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Endereço IP</label>
+            <input [(ngModel)]="ip" name="ip" required placeholder="192.168.1.1"
+              class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition" />
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Usuário</label>
+            <input [(ngModel)]="username" name="username" required
+              class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition" />
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Senha</label>
+            <input [(ngModel)]="password" name="password" type="password"
+              class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition" />
+          </div>
+        </div>
+
+        <div *ngIf="error" class="mt-4 bg-red-900/40 border border-red-700 text-red-300 text-sm rounded-lg px-4 py-3">
+          {{ error }}
+        </div>
+
+        <button type="submit" [disabled]="loading || !ip || !username"
+          class="mt-6 w-full bg-blue-600 hover:bg-blue-500 disabled:bg-blue-900 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-2">
+          <svg *ngIf="loading" class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+          </svg>
+          {{ loading ? 'Conectando...' : 'Conectar' }}
+        </button>
+      </form>
+    </div>
+
+    <p class="text-center text-gray-600 text-xs mt-6">
+      Porta 8728 (API) ou 80 (REST) • RouterOS v6 e v7+
+    </p>
+  </div>
+</div>

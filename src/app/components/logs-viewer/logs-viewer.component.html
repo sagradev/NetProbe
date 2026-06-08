@@ -1,0 +1,16 @@
+<div class="space-y-3">
+  <div class="flex gap-2 flex-wrap">
+    <button *ngFor="let t of topics" (click)="topicFilter = t"
+      [class]="topicFilter === t ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'"
+      class="px-3 py-1 rounded text-xs font-medium transition">{{ t }}</button>
+  </div>
+  <div class="space-y-1 max-h-[480px] overflow-y-auto">
+    <div *ngFor="let log of filtered"
+      class="flex gap-3 text-xs font-mono py-2 px-3 rounded bg-gray-800/60 border border-gray-700/50 hover:bg-gray-700/40">
+      <span class="text-gray-500 shrink-0 w-20">{{ log.time }}</span>
+      <span class="text-blue-400 shrink-0 w-24 truncate">{{ log.topics }}</span>
+      <span class="text-gray-200">{{ log.message }}</span>
+    </div>
+    <p *ngIf="filtered.length === 0" class="text-gray-500 text-sm py-6 text-center">Nenhum log encontrado</p>
+  </div>
+</div>

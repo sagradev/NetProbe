@@ -1,0 +1,24 @@
+<div class="overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-gray-400 border-b border-gray-700">
+        <th class="py-3 pr-4">IP</th>
+        <th class="py-3 pr-4">MAC</th>
+        <th class="py-3 pr-4">Interface</th>
+        <th class="py-3 pr-4">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of entries" class="border-b border-gray-800 hover:bg-gray-700/40 transition">
+        <td class="py-3 pr-4 font-mono text-white">{{ e.address }}</td>
+        <td class="py-3 pr-4 font-mono text-gray-300 text-xs">{{ e.macAddress }}</td>
+        <td class="py-3 pr-4 text-gray-300">{{ e.interface }}</td>
+        <td class="py-3 pr-4">
+          <span [class]="e.status === 'reachable' ? 'bg-green-900 text-green-300' : 'bg-yellow-900 text-yellow-300'"
+            class="px-2 py-0.5 rounded text-xs font-medium">{{ e.status }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="entries.length === 0" class="text-gray-500 text-sm py-6 text-center">Tabela ARP vazia</p>
+</div>
