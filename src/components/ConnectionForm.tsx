@@ -11,7 +11,7 @@ const Spinner = () => (
 export default function ConnectionForm() {
   const connect = useMikrotik(s => s.connect)
   const [ip, setIp] = useState('')
-  const [port, setPort] = useState(8728)
+  const [port, setPort] = useState(9080)
   const [username, setUsername] = useState('admin')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -54,7 +54,7 @@ export default function ConnectionForm() {
                   />
                 </div>
                 <div className="w-28">
-                  <label className="block text-sm text-gray-400 mb-1">Porta API</label>
+                  <label className="block text-sm text-gray-400 mb-1">Porta HTTP</label>
                   <input
                     value={port} onChange={e => setPort(Number(e.target.value))}
                     type="number" required min={1} max={65535}
@@ -99,7 +99,7 @@ export default function ConnectionForm() {
         </div>
 
         <p className="text-center text-gray-600 text-xs mt-6">
-          Porta padrão 8728 (RouterOS API) • v6 e v7+
+          Porta padrão 9080 (REST API HTTP) • RouterOS v7+
         </p>
       </div>
     </div>
