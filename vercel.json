@@ -1,6 +1,6 @@
 {
-  "buildCommand": "ng build --configuration production",
-  "outputDirectory": "dist/netprobe-front/browser",
-  "installCommand": "npm install --legacy-peer-deps",
-  "framework": null
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "framework": "vite"
 }
