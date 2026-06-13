@@ -113,3 +113,79 @@ export interface BandwidthTestResult {
   direction: string
   duration: number
 }
+
+// ── WiFi ─────────────────────────────────────────────────────────────────────
+
+export interface WifiInterface {
+  id: string
+  name: string
+  ssid: string
+  band: string
+  channel: string
+  disabled: boolean
+  running: boolean
+  macAddress: string
+  securityProfile: string
+}
+
+export interface WifiSecurityProfile {
+  id: string
+  name: string
+  mode: string
+  authentication: string
+  wpaPreSharedKey: string
+  wpa2PreSharedKey: string
+}
+
+export interface UpdateWifiRequest extends ConnectionRequest {
+  id: string
+  ssid?: string
+}
+
+export interface UpdateSecurityProfileRequest extends ConnectionRequest {
+  id: string
+  wpaPreSharedKey?: string
+  wpa2PreSharedKey?: string
+}
+
+// ── DHCP Estático ─────────────────────────────────────────────────────────────
+
+export interface StaticLease {
+  id: string
+  address: string
+  macAddress: string
+  hostName: string
+  comment: string
+  server: string
+  disabled: boolean
+}
+
+export interface AddStaticLeaseRequest extends ConnectionRequest {
+  address: string
+  macAddress: string
+  hostName?: string
+  comment?: string
+  server?: string
+}
+
+export interface RemoveRequest extends ConnectionRequest {
+  id: string
+}
+
+// ── Filtro de MAC ─────────────────────────────────────────────────────────────
+
+export interface MacAccessEntry {
+  id: string
+  macAddress: string
+  interface: string
+  authentication: boolean
+  forwarding: boolean
+  comment: string
+  disabled: boolean
+}
+
+export interface AddMacAccessRequest extends ConnectionRequest {
+  macAddress: string
+  interface?: string
+  comment?: string
+}

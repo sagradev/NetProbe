@@ -7,17 +7,23 @@ import ArpTable from './ArpTable'
 import DhcpTable from './DhcpTable'
 import LogsViewer from './LogsViewer'
 import DiagnosticPanel from './DiagnosticPanel'
+import WifiPanel from './WifiPanel'
+import DhcpStaticPanel from './DhcpStaticPanel'
+import MacFilterPanel from './MacFilterPanel'
 
-type Tab = 'overview' | 'interfaces' | 'routes' | 'arp' | 'dhcp' | 'logs' | 'diagnostic'
+type Tab = 'overview' | 'interfaces' | 'routes' | 'arp' | 'dhcp' | 'logs' | 'diagnostic' | 'wifi' | 'dhcp-static' | 'mac-filter'
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: 'overview', label: 'Visão Geral' },
-  { id: 'interfaces', label: 'Interfaces' },
-  { id: 'routes', label: 'Rotas' },
-  { id: 'arp', label: 'ARP' },
-  { id: 'dhcp', label: 'DHCP' },
-  { id: 'logs', label: 'Logs' },
-  { id: 'diagnostic', label: 'Diagnóstico' },
+  { id: 'overview',    label: 'Visão Geral' },
+  { id: 'interfaces',  label: 'Interfaces' },
+  { id: 'routes',      label: 'Rotas' },
+  { id: 'arp',         label: 'ARP' },
+  { id: 'dhcp',        label: 'DHCP' },
+  { id: 'logs',        label: 'Logs' },
+  { id: 'diagnostic',  label: 'Diagnóstico' },
+  { id: 'wifi',        label: 'WiFi' },
+  { id: 'dhcp-static', label: 'DHCP Estático' },
+  { id: 'mac-filter',  label: 'Filtro MAC' },
 ]
 
 const Spinner = () => (
@@ -116,6 +122,15 @@ export default function Dashboard() {
         )}
         {activeTab === 'diagnostic' && (
           <DiagnosticPanel credentials={credentials} />
+        )}
+        {activeTab === 'wifi' && (
+          <WifiPanel credentials={credentials} />
+        )}
+        {activeTab === 'dhcp-static' && (
+          <DhcpStaticPanel credentials={credentials} />
+        )}
+        {activeTab === 'mac-filter' && (
+          <MacFilterPanel credentials={credentials} />
         )}
       </main>
     </div>
